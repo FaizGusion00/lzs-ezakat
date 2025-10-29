@@ -1,0 +1,24 @@
+.
+ GETTING-STARTED.md
+ PROJECT-STRUCTURE.txt
+ PROJECT-SUMMARY.md
+ README.md
+ docker
+ docker-compose.yml
+  mysql
+   conf.d
+   init
+  nginx
+   conf.d
+   ssl
+  redis
+ docs
+  01-SYSTEM-ARCHITECTURE.md
+  02-DATABASE-SCHEMA.md
+  03-API-SPECIFICATIONS.md
+  04-SECURITY.md
+  05-DEPLOYMENT.md
+  diagrams
+   ARCHITECTURE.md
+   ERD.md
+   SYSTEM-FLOW.md

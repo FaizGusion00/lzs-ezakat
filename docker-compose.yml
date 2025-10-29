@@ -1,0 +1,169 @@
+# Docker Compose for Zakat Selangor Development Environment
+# Author: Faiz Nasir
+# Version: 1.0.0
+
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: lzs_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_change_me
+      MYSQL_DATABASE: lzs_zakat_db
+      MYSQL_USER: lzs_app
+      MYSQL_PASSWORD: lzs_password_change_me
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/conf.d:/etc/mysql/conf.d
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    networks:
+      - lzs_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password_change_me"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache, Session & Queue
+  redis:
+    image: redis:7-alpine
+    container_name: lzs_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass redis_password_change_me
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - lzs_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # phpMyAdmin (Database Management)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: lzs_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root_password_change_me
+      UPLOAD_LIMIT: 100M
+    ports:
+      - "8080:80"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - lzs_network
+
+  # Laravel Backend (will be added after setup)
+  # Uncomment after Laravel installation
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   container_name: lzs_backend
+  #   restart: unless-stopped
+  #   working_dir: /var/www
+  #   volumes:
+  #     - ./backend:/var/www
+  #     - ./backend/storage:/var/www/storage
+  #   environment:
+  #     - DB_HOST=mysql
+  #     - DB_DATABASE=lzs_zakat_db
+  #     - DB_USERNAME=lzs_app
+  #     - DB_PASSWORD=lzs_password_change_me
+  #     - REDIS_HOST=redis
+  #     - REDIS_PASSWORD=redis_password_change_me
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     mysql:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   networks:
+  #     - lzs_network
+  #   command: php artisan serve --host=0.0.0.0 --port=8000
+
+  # Next.js Frontend (will be added after setup)
+  # Uncomment after Next.js installation
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   container_name: lzs_frontend
+  #   restart: unless-stopped
+  #   working_dir: /app
+  #   volumes:
+  #     - ./frontend:/app
+  #     - /app/node_modules
+  #     - /app/.next
+  #   environment:
+  #     - NEXT_PUBLIC_API_URL=http://localhost:8000/api
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - lzs_network
+  #   command: npm run dev
+
+  # MinIO (S3-compatible object storage for local development)
+  minio:
+    image: minio/minio:latest
+    container_name: lzs_minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin_change_me
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - lzs_network
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  # Mailhog (Email testing - development only)
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: lzs_mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025" # SMTP
+      - "8025:8025" # Web UI
+    networks:
+      - lzs_network
+
+networks:
+  lzs_network:
+    driver: bridge
+    name: lzs_network
+
+volumes:
+  mysql_data:
+    driver: local
+    name: lzs_mysql_data
+  redis_data:
+    driver: local
+    name: lzs_redis_data
+  minio_data:
+    driver: local
+    name: lzs_minio_data
+
