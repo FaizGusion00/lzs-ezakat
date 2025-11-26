@@ -174,6 +174,7 @@ npm run dev
 ## 👨‍💻 Development Team
 
 **Lead Developer**: Faiz Nasir (Lead & Senior Software Engineer @ Software Manager of Quantsmith Ventures Sdn Bhd)
+
 **Client**: Lembaga Zakat Selangor (LZS)
 
 ---
