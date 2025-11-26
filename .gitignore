@@ -110,3 +110,9 @@ public/receipts/
 storage/receipts/
 storage/uploads/
 
+# ================================
+# Coding Files
+# ================================
+
+UIUX-ARCHITECTURE-COMPARISON.md
+DEMO-READINESS-REPORT.md

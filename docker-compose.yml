@@ -67,35 +67,37 @@ services:
     networks:
       - lzs_network
 
-  # Laravel Backend (will be added after setup)
-  # Uncomment after Laravel installation
-  # backend:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile
-  #   container_name: lzs_backend
-  #   restart: unless-stopped
-  #   working_dir: /var/www
-  #   volumes:
-  #     - ./backend:/var/www
-  #     - ./backend/storage:/var/www/storage
-  #   environment:
-  #     - DB_HOST=mysql
-  #     - DB_DATABASE=lzs_zakat_db
-  #     - DB_USERNAME=lzs_app
-  #     - DB_PASSWORD=lzs_password_change_me
-  #     - REDIS_HOST=redis
-  #     - REDIS_PASSWORD=redis_password_change_me
-  #   ports:
-  #     - "8000:8000"
-  #   depends_on:
-  #     mysql:
-  #       condition: service_healthy
-  #     redis:
-  #       condition: service_healthy
-  #   networks:
-  #     - lzs_network
-  #   command: php artisan serve --host=0.0.0.0 --port=8000
+  # Laravel Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: lzs_backend
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./backend:/var/www
+      - ./backend/storage:/var/www/storage
+    environment:
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=lzs_zakat_db
+      - DB_USERNAME=lzs_app
+      - DB_PASSWORD=lzs_password_change_me
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=redis_password_change_me
+      - REDIS_PORT=6379
+    ports:
+      - "8000:8000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - lzs_network
+    command: php artisan serve --host=0.0.0.0 --port=8000
 
   # Next.js Frontend (will be added after setup)
   # Uncomment after Next.js installation
