@@ -1,6 +1,6 @@
 # 🕌 Sistem Kutipan Zakat Selangor (LZS)
 
-> **Professional End-to-End Digital Zakat Collection Platform**  
+> **End-to-End Digital Zakat Collection Platform System**  
 > Author: **Faiz Nasir**  
 > Date: October 29, 2025
 
@@ -173,7 +173,7 @@ npm run dev
 
 ## 👨‍💻 Development Team
 
-**Lead Developer**: Faiz Nasir  
+**Lead Developer**: Faiz Nasir (Lead & Senior Software Engineer @ Software Manager of Quantsmith Ventures Sdn Bhd)
 **Client**: Lembaga Zakat Selangor (LZS)
 
 ---
