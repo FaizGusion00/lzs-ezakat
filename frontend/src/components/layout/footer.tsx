@@ -4,6 +4,7 @@
  */
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function Footer() {
   return (
@@ -13,13 +14,23 @@ export function Footer() {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <span className="text-lg font-bold">Z</span>
+              <div className="relative h-8 w-8 overflow-hidden rounded-lg bg-primary/5 flex items-center justify-center">
+                <Image
+                  src="/lzs-logo.png"
+                  alt="Lembaga Zakat Selangor"
+                  fill
+                  sizes="32px"
+                  className="object-contain"
+                />
               </div>
-              <span className="font-bold text-lg">LZS eZakat</span>
+              <div className="flex flex-col leading-tight">
+                <span className="font-semibold text-sm">Lembaga Zakat Selangor</span>
+                <span className="text-xs text-muted-foreground">eZakat • Kutipan & Rekod Zakat Digital</span>
+              </div>
             </div>
             <p className="text-sm text-muted-foreground">
-              Platform digital end-to-end untuk kutipan zakat dengan ketelusan, keselamatan, dan kecekapan tinggi.
+              Platform digital rasmi untuk memudahkan muzakki menunaikan zakat dengan selamat, telus dan
+              teratur selaras dengan visi Lembaga Zakat Selangor.
             </p>
           </div>
 
@@ -67,8 +78,18 @@ export function Footer() {
             <h3 className="font-semibold mb-4">Hubungi</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>Lembaga Zakat Selangor</li>
-              <li>Shah Alam, Selangor</li>
-              <li>Email: info@zakat-selangor.gov.my</li>
+              <li>Talian Zakat Selangor: 1-300-88-4343</li>
+              <li>Email: maklumbalasaduan@zakatselangor.com.my</li>
+              <li>
+                <Link 
+                  href="https://www.zakatselangor.com.my" 
+                  className="hover:text-foreground underline underline-offset-4"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  www.zakatselangor.com.my
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

@@ -21,7 +21,10 @@ import {
   MapPin,
   Calculator,
   ArrowRight,
-  Users
+  Users,
+  Calendar,
+  CreditCard,
+  CheckCircle2
 } from 'lucide-react';
 
 export default function AmilDashboardPage() {
@@ -48,6 +51,65 @@ export default function AmilDashboardPage() {
     paid_commission: 2500.00,
     pending_commission: 625.00,
   };
+
+  // Mock data for recent collections
+  interface RecentCollection {
+    id: string;
+    payer_name: string;
+    zakat_type: string;
+    amount: number;
+    ref_no: string;
+    collected_at: string;
+    location?: string;
+  }
+
+  const recentCollections: RecentCollection[] = [
+    {
+      id: '1',
+      payer_name: 'Ahmad Bin Ali',
+      zakat_type: 'Zakat Pendapatan',
+      amount: 1250.00,
+      ref_no: 'LZS-2025-001234',
+      collected_at: '20 Januari 2025, 14:30',
+      location: '3.1390°N, 101.6869°E'
+    },
+    {
+      id: '2',
+      payer_name: 'Syarikat ABC Sdn Bhd',
+      zakat_type: 'Zakat Perniagaan',
+      amount: 5000.00,
+      ref_no: 'LZS-2025-001189',
+      collected_at: '15 Januari 2025, 10:15',
+      location: '3.1395°N, 101.6875°E'
+    },
+    {
+      id: '3',
+      payer_name: 'Fatimah Binti Hassan',
+      zakat_type: 'Zakat Emas',
+      amount: 2500.00,
+      ref_no: 'LZS-2025-001156',
+      collected_at: '12 Januari 2025, 16:45',
+      location: '3.1385°N, 101.6860°E'
+    },
+    {
+      id: '4',
+      payer_name: 'Mohd Zain Bin Ismail',
+      zakat_type: 'Zakat Wang Simpanan',
+      amount: 1500.00,
+      ref_no: 'LZS-2025-001145',
+      collected_at: '10 Januari 2025, 11:20',
+      location: '3.1400°N, 101.6880°E'
+    },
+    {
+      id: '5',
+      payer_name: 'Siti Nurhaliza Binti Ahmad',
+      zakat_type: 'Zakat Pendapatan',
+      amount: 1000.00,
+      ref_no: 'LZS-2025-001134',
+      collected_at: '8 Januari 2025, 09:30',
+      location: '3.1392°N, 101.6872°E'
+    },
+  ];
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -182,19 +244,75 @@ export default function AmilDashboardPage() {
           {/* Recent Collections */}
           <Card>
             <CardHeader>
-              <CardTitle>Kutipan Terkini</CardTitle>
-              <CardDescription>5 kutipan terakhir anda</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8 text-muted-foreground">
-                <Receipt className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>Tiada kutipan terkini</p>
-                <Link href="/amil/collect">
-                  <Button variant="outline" className="mt-4">
-                    Mula Kutipan Pertama
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Kutipan Terkini</CardTitle>
+                  <CardDescription>5 kutipan terakhir anda</CardDescription>
+                </div>
+                <Link href="/amil/collections">
+                  <Button variant="outline" size="sm">
+                    Lihat Semua
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
               </div>
+            </CardHeader>
+            <CardContent>
+              {recentCollections.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Receipt className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>Tiada kutipan terkini</p>
+                  <Link href="/amil/collect">
+                    <Button variant="outline" className="mt-4">
+                      Mula Kutipan Pertama
+                    </Button>
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {recentCollections.map((collection) => (
+                    <Card key={collection.id} className="hover:shadow-md transition-shadow">
+                      <CardContent className="pt-6">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                          <div className="flex-1 space-y-2">
+                            <div className="flex items-center gap-3">
+                              <h3 className="font-semibold text-lg">{collection.payer_name}</h3>
+                              <Badge variant="outline">{collection.zakat_type}</Badge>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-muted-foreground">
+                              <div className="flex items-center gap-2">
+                                <Receipt className="h-4 w-4" />
+                                <span>{collection.ref_no}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Calendar className="h-4 w-4" />
+                                <span>{collection.collected_at}</span>
+                              </div>
+                              {collection.location && (
+                                <div className="flex items-center gap-2">
+                                  <MapPin className="h-4 w-4" />
+                                  <span className="text-xs">{collection.location}</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <div className="text-right">
+                              <p className="text-2xl font-bold text-primary">
+                                RM {collection.amount.toLocaleString('ms-MY', { minimumFractionDigits: 2 })}
+                              </p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Komisyen: RM {(collection.amount * 0.02).toLocaleString('ms-MY', { minimumFractionDigits: 2 })}
+                              </p>
+                            </div>
+                            <CheckCircle2 className="h-5 w-5 text-green-600" />
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

@@ -6,6 +6,7 @@
  */
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAuthStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { 
@@ -18,6 +19,7 @@ import {
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Menu, LogOut, User, Calculator, Receipt, Home } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export function Header() {
   const { user, isAuthenticated, clearAuth } = useAuthStore();
@@ -39,14 +41,26 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
-        {/* Logo */}
+        {/* Logo / Brand */}
         <Link href="/" className="flex items-center space-x-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <span className="text-lg font-bold">Z</span>
+          <div className="relative h-9 w-9 overflow-hidden rounded-lg bg-primary/5 flex items-center justify-center">
+            <Image
+              src="/lzs-logo.png"
+              alt="Lembaga Zakat Selangor"
+              fill
+              sizes="36px"
+              className="object-contain"
+              priority
+            />
           </div>
-          <span className="font-bold text-lg hidden sm:inline-block">
-            LZS eZakat
-          </span>
+          <div className="hidden sm:flex flex-col leading-tight">
+            <span className="font-semibold text-sm text-foreground">
+              Lembaga Zakat Selangor
+            </span>
+            <span className="text-xs text-muted-foreground">
+              eZakat • Sentiasa Bersama, Sentiasa Menjaga
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Navigation */}
@@ -106,8 +120,9 @@ export function Header() {
           )}
         </nav>
 
-        {/* Auth Actions */}
-        <div className="flex items-center space-x-4">
+        {/* Theme + Auth Actions */}
+        <div className="flex items-center space-x-2 sm:space-x-4">
+          <ThemeToggle />
           {isAuthenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

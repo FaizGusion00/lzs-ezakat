@@ -4,6 +4,7 @@
  */
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -30,29 +31,49 @@ export default function HomePage() {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-background to-primary/5 py-12 sm:py-16 md:py-20 lg:py-32">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="relative overflow-hidden py-12 sm:py-16 md:py-20 lg:py-32 min-h-[500px] sm:min-h-[600px] md:min-h-[700px] flex items-center">
+          {/* Hero Image Background */}
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="/hero.png"
+              alt="Hero Background"
+              fill
+              priority
+              className="object-cover object-center"
+              quality={90}
+            />
+            {/* Dark Overlay for Text Visibility */}
+            <div className="absolute inset-0 bg-black/50 dark:bg-black/60" />
+            {/* Gradient Overlay for Better Text Contrast */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70 dark:from-black/70 dark:via-black/60 dark:to-black/80" />
+          </div>
+
+          {/* Content */}
+          <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-4xl text-center space-y-4 sm:space-y-6">
-              <Badge variant="secondary" className="mb-4">
-                Platform Digital Zakat Selangor
+              <Badge className="mb-4 bg-[#16a34a]/90 backdrop-blur-sm text-white border-[#16a34a]/30 shadow-lg px-4 py-1.5 text-sm font-medium">
+                Lembaga Zakat Selangor • eZakat
               </Badge>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-                Bayar Zakat Anda
-                <span className="text-primary"> Dengan Mudah</span>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white drop-shadow-lg">
+                Di Sebalik Senyuman,
+                <span className="block text-[#16a34a] drop-shadow-md">Ada Derita.</span>
               </h1>
-              <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
-                Platform digital yang selamat dan pantas untuk individu dan syarikat menunaikan zakat. 
-                Proses pembayaran kurang dari 3 minit.
+              <p className="text-base sm:text-lg md:text-xl text-white/95 max-w-2xl mx-auto px-4 drop-shadow-md">
+                Ringankan beban mereka dengan zakat anda. Platform digital rasmi untuk bayaran zakat
+                yang selamat, telus dan mudah untuk muzakki individu dan syarikat.
+              </p>
+              <p className="text-xs sm:text-sm text-white/85 max-w-xl mx-auto italic drop-shadow-sm">
+                “Dan dirikanlah oleh kamu akan sembahyang dan tunaikanlah zakat...” (Surah Al-Baqarah, 2:110)
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
                 <Link href="/calculator">
-                  <Button size="lg" className="w-full sm:w-auto">
+                  <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg">
                     <Calculator className="mr-2 h-5 w-5" />
                     Kira Zakat Sekarang
                   </Button>
                 </Link>
                 <Link href="/auth/register">
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto">
+                  <Button size="lg" className="w-full sm:w-auto bg-white text-primary hover:bg-white/90 shadow-lg border-2 border-white/20">
                     Daftar Akaun
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>

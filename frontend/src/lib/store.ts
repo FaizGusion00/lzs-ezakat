@@ -28,10 +28,10 @@ interface UIState {
   setSidebarOpen: (open: boolean) => void;
 }
 
-// Auth Store
+// Auth Store with middleware to always sync isAuthenticated
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       token: null,
       isAuthenticated: false,
@@ -51,9 +51,45 @@ export const useAuthStore = create<AuthState>()(
     {
       name: 'auth-storage',
       storage: createJSONStorage(() => localStorage),
+      // Rehydrate: Sync isAuthenticated with user and token after loading from localStorage
+      onRehydrateStorage: () => (state, error) => {
+        if (!error && state) {
+          // Always set isAuthenticated based on whether user and token exist
+          const isAuthenticated = !!(state.user && state.token);
+          // Update state synchronously if needed
+          if (state.isAuthenticated !== isAuthenticated) {
+            // Use getState and setState to update
+            const currentState = useAuthStore.getState();
+            useAuthStore.setState({ 
+              ...currentState,
+              user: state.user,
+              token: state.token,
+              isAuthenticated 
+            });
+          }
+        }
+      },
     }
   )
 );
+
+// Middleware to always sync isAuthenticated with user and token
+// This ensures isAuthenticated is always correct even if state gets out of sync
+useAuthStore.subscribe(
+  (state) => {
+    const computedAuth = !!(state.user && state.token);
+    if (state.isAuthenticated !== computedAuth) {
+      useAuthStore.setState({ isAuthenticated: computedAuth });
+    }
+  }
+);
+
+// Selector hook for computed isAuthenticated (always syncs with user and token)
+export const useIsAuthenticated = () => {
+  const user = useAuthStore((state) => state.user);
+  const token = useAuthStore((state) => state.token);
+  return !!(user && token);
+};
 
 // UI Store
 export const useUIStore = create<UIState>((set) => ({
